@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home Page</title>
+    </head>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background: url(https://cdn.glitch.global/70b5fad4-9e5e-4d3e-8188-fbcd53437190/bg.jpg?v=1693325309311) no-repeat center center fixed;
+            background-size: cover;
+            backdrop-filter: blur(8px);
+        }
+        .box{
+            border: 1px solid #ccc;
+            padding: 50px;
+            border-radius: 10px;
+            background-color: #f5f5f5;
+            font-size: larger;
+        }
+        #bar{
+            height: 25px;
+            width: 255px;
+            border-radius: 5px
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 80px;
+        
+
+        }
+        p{
+            text-align: center;
+        }
+    </style>
+    <body>
+        <div class="box">
+            <h1 style="text-align: center;">Login</h1>
+            <form action="/loginSubmit" method="GET">
+                Email Id </br>
+                <input type="email" Name="email" placeholder="Enter your mail id" id="bar"></br></br>
+                Password </br>
+                <input type="password" Name="password" placeholder="Enter password" id="bar"></br></br>
+                <input type="Submit" class="button">
+            </form>
+            <p>Don't have an account?<a href="/signup">SIGNUP</a></p>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <title>Result Page</title>
+    </head>
+    <style>
+        body{
+            background-image: url(https://cdn.glitch.global/70b5fad4-9e5e-4d3e-8188-fbcd53437190/bg3.jpg?v=1693323177826);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.7); 
+            padding: 20px;
+            margin: 50px auto; 
+            width: 80%; 
+            max-width: 800px; 
+            border-radius: 10px; 
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); 
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1, h3 {
+            margin: 10px 0; 
+        }
+    </style>
+    <body>
+        <div class="container">
+            <h1><u>The Validations are here</u></h1>
+            <h3>url : <i><%= url%></i></h3>
+            <h3> country : <i><%= country%></i></h3>
+            <h3>country_code : <i><%= country_code%></i></h3>
+            <h3>region : <i><%= region%></i></h3>
+            <h3>region_code : <i><%= region_code%></i></h3>
+            <h3>city : <i><%= city%></i></h3>
+            <h3>timezone : <i><%= timezone%></i></h3>
+            <h3>zip : <i><%= zip%></i></h3>
+            <h3>is_valid : <i><%= is_valid%></i></h3>
+            <h3>lat : <i><%= lat%></i></h3>
+            <h3>lon : <i><%= lon%></i></h3>
+            <h3>isp : <i><%= isp%></i></h3>     
+        </div>
+    </body>
+</html>
