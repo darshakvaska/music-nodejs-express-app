@@ -3,15 +3,19 @@ const app = express()
 const port = 3006
 const admin = require('firebase-admin');
 const request = require('request');
+var passwordHash = require("password-hash");
+
 
 const serviceAccount = require('./musickey.json');
+const bodyParser = require('body-parser');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
 const db = admin.firestore();
-
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:false}));
 app.set("views engine", "ejs");
 
 app.get('/home', (req, res) => {
@@ -22,32 +26,51 @@ app.get('/signup', (req, res) => {
   res.render(__dirname+"/public/"+"signup.ejs");
 });
 
-app.get('/signupSubmit', function (req, res) {
-  db.collection('submit').add({
-    Name:req.query.name,
-    Email:req.query.email,
-    Password:req.query.password,
-    ConfirmPassword:req.query.confirmpassword
-  }).then(()=>{
-  res.render(__dirname+"/public/"+"signupSubmit.ejs");
+app.post('/signupSubmit', function (req, res) {
+
+  db.collection('submit').where("Email","==",req.body.email).get()
+  .then((docs) => {
+    if(docs.size>0){
+      res.send("This email is already exists")
+    }
+    else{
+      db.collection('submit').add({
+        Name:req.body.name,
+        Email:req.body.email,
+        Password:req.body.password,
+        ConfirmPassword:req.body.confirmpassword
+      }).then(()=>{
+      res.render(__dirname+"/public/"+"signupSubmit.ejs");
+      })
+    }
   })
+  
 });
 
 app.get('/login', (req, res) => {
   res.render(__dirname+"/public/"+"login.ejs");
 });
 
-app.get('/loginSubmit', function (req, res) {
+app.post('/loginSubmit', function (req, res) {
+
+  //passwordHash.verify('password123',hashedPassword)
+
+
   db.collection('submit')
-  .where("Email" ,"==",req.query.email)
-  .where("Password","==",req.query.password)
+  .where("Email" ,"==",req.body.email)
+  .where("Password","==",req.body.password)
   .get()
   .then((docs)=>{
+    let verified=false;
+    docs.forEach((doc)=>{
+      verified=passwordHash.verify(req.body.password,doc.data().password);
+    });
+
     if(docs.size>0){
      res.render(__dirname+"/public/"+"main.ejs");
     }
     else{
-      res.send("Failed,Please signup first");
+      res.send("Failed,Incorrect email or password");
     }
   });
   
@@ -85,10 +108,10 @@ app.get('/datasubmit', (req, res) => {
 
         res.render(__dirname+"/public/"+"mainSubmit.ejs",{
           is_valid:  is_valid,
-          country:country,
-          country_code:country_code,
-          region_code:region_code,
-          region:region,
+          country: country,
+          country_code: country_code,
+          region_code: region_code,
+          region: region,
           city: city,
           zip: zip,
           lat:lat ,
