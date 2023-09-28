@@ -27,7 +27,7 @@ app.get('/signup', (req, res) => {
 });
 
 app.post('/signupSubmit', function (req, res) {
-
+  const hashedPassword = passwordHash.generate(req.body.password);
   db.collection('submit').where("Email","==",req.body.email).get()
   .then((docs) => {
     if(docs.size>0){
@@ -37,13 +37,13 @@ app.post('/signupSubmit', function (req, res) {
       db.collection('submit').add({
         Name:req.body.name,
         Email:req.body.email,
-        Password:req.body.password,
+        Password:hashedPassword,
         ConfirmPassword:req.body.confirmpassword
       }).then(()=>{
       res.render(__dirname+"/public/"+"signupSubmit.ejs");
-      })
+      });
     }
-  })
+  });
   
 });
 
@@ -53,25 +53,37 @@ app.get('/login', (req, res) => {
 
 app.post('/loginSubmit', function (req, res) {
 
-  //passwordHash.verify('password123',hashedPassword)
+  const enteredPassword = req.body.password;
 
 
   db.collection('submit')
   .where("Email" ,"==",req.body.email)
-  .where("Password","==",req.body.password)
+  //.where("Password","==",req.body.password)
   .get()
   .then((docs)=>{
-    let verified=false;
-    docs.forEach((doc)=>{
-      verified=passwordHash.verify(req.body.password,doc.data().password);
-    });
+    if (docs.size>0){
+      docs.forEach((doc)=>{
+        const hashedPassword=doc.data().Password;
+        if (passwordHash.verify(enteredPassword,hashedPassword)){
+          res.render(__dirname+"/public/"+"main.ejs");
+        }else{
+          res.send("Fail");
+        }
+      })
+    }else{
+      res.send("Failed");
+    }
+    //let verified=false;
+    //docs.forEach((doc)=>{
+     // verified=passwordHash.verify(req.body.password,doc.data().password);
+    //});
 
-    if(docs.size>0){
-     res.render(__dirname+"/public/"+"main.ejs");
-    }
-    else{
-      res.send("Failed,Incorrect email or password");
-    }
+    //if(docs.size>0){
+     //res.render(__dirname+"/public/"+"main.ejs");
+    //}
+    //else{
+     // res.send("Failed,Incorrect email or password");
+    //}
   });
   
 });
